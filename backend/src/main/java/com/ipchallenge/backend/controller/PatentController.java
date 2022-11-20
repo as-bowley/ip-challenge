@@ -3,7 +3,9 @@ package com.ipchallenge.backend.controller;
 import com.ipchallenge.backend.exception.PatentNotFoundException;
 import com.ipchallenge.backend.model.Patent;
 import com.ipchallenge.backend.repository.PatentRepository;
+import com.ipchallenge.backend.service.PatentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +16,12 @@ public class PatentController {
 
     @Autowired
     private PatentRepository patentRepository;
+
+    private PatentService patentService;
+
+    public PatentController(PatentService patentService) {
+        this.patentService = patentService;
+    }
 
     @PostMapping("/patent")
      Patent patent(@RequestBody Patent newPatent){
@@ -48,5 +56,10 @@ public class PatentController {
         }
         patentRepository.deleteById(id);
         return "Patent " + id + " has been deleted successfully.";
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Patent>> searchPatents(@RequestParam("query") String query) {
+        return ResponseEntity.ok(patentService.searchPatents(query));
     }
 }

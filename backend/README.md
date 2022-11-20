@@ -2,7 +2,7 @@
 
 **1. Create Mysql database**
 ```bash
-create database blogapi
+create database ipchallenge
 ```
 
 **2. Change mysql username and password as per your installation**

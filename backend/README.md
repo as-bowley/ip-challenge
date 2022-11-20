@@ -4,7 +4,6 @@
 ```bash
 create database blogapi
 ```
-- run `src/main/resources/ipchallenge.sql`
 
 **2. Change mysql username and password as per your installation**
 

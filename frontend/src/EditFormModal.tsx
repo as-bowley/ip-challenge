@@ -29,18 +29,20 @@ interface Props {
     patentDate: string;
     setPatentDate: Dispatch<SetStateAction<string>>;
   };
+  editableID: Number;
   fetchPatents: () => void;
 }
 
-const AddFormModal: React.FC<Props> = ({
+const EditFormModal: React.FC<Props> = ({
   open,
   handleClose,
   formProps,
+  editableID,
   fetchPatents,
 }) => {
-  const postPatent = () => {
+  const updatePatent = (id: Number) => {
     axios
-      .post("http://localhost:8080/patent", {
+      .put(`http://localhost:8080/patent/${id}`, {
         publication_date: formProps.patentDate,
         title: formProps.patentTitle,
       })
@@ -70,7 +72,7 @@ const AddFormModal: React.FC<Props> = ({
             component="h2"
             sx={{ marginBottom: "2rem" }}
           >
-            Add a new Patent
+            Update Patent
           </Typography>
           <TextField
             id="outline-basic"
@@ -88,8 +90,8 @@ const AddFormModal: React.FC<Props> = ({
             onChange={(e) => formProps.setPatentDate(e.target.value)}
             sx={{ marginBottom: "2rem" }}
           />
-          <Button variant="contained" onClick={postPatent}>
-            Add
+          <Button variant="contained" onClick={() => updatePatent(editableID)}>
+            Update
           </Button>
         </Box>
       </Fade>
@@ -97,4 +99,4 @@ const AddFormModal: React.FC<Props> = ({
   );
 };
 
-export default AddFormModal;
+export default EditFormModal;

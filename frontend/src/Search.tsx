@@ -1,18 +1,33 @@
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import { Button, FormGroup } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { Autocomplete } from "@mui/material";
 
 interface Props {
   searchQuery: string;
-  setSearchQuery: Dispatch<SetStateAction<string>>;
-  setPatents: any;
+  setSearchQuery: Dispatch<SetStateAction<any>>;
+  setPatents: (
+    patents: {
+      publication_date: String;
+      publication_id: Number;
+      title: String;
+    }[]
+  ) => void;
+  fetchPatents: () => void;
+  patents: {
+    publication_date: String;
+    publication_id: Number;
+    title: String;
+  }[];
 }
 
 const Search: React.FC<Props> = ({
   searchQuery,
   setSearchQuery,
   setPatents,
+  fetchPatents,
+  patents,
 }) => {
   const search = () => {
     axios
@@ -22,18 +37,35 @@ const Search: React.FC<Props> = ({
       });
   };
 
+  useEffect(() => {
+    fetchPatents();
+    console.log(searchQuery);
+  }, [searchQuery]);
+
   return (
     <FormGroup row onSubmit={search} sx={{ width: "100%" }}>
-      <TextField
+      <Autocomplete
+        freeSolo={true}
+        autoComplete={true}
+        options={patents.map((patent) => patent.title)}
         id="outline-basic"
-        onChange={(event) => setSearchQuery(event.target.value)}
         value={searchQuery}
-        // fullWidth
-        type="search"
-        label="Search patents"
+        onChange={(_event, value) => setSearchQuery(value)}
         sx={{ flex: "1" }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Patent"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        )}
       />
-      <Button variant="contained" placeholder="Search" onClick={search}>
+      <Button
+        variant="contained"
+        placeholder="Search"
+        onClick={search}
+        value={searchQuery}
+      >
         Search
       </Button>
     </FormGroup>

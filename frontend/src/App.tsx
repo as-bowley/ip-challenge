@@ -39,13 +39,13 @@ const App: React.FC = () => {
       >
         Add
       </Button>
-      <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <Results patents={patents} />
-      <AddFormModal
-        open={open}
-        handleOpen={handleOpen}
-        handleClose={handleClose}
+      <Search
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        setPatents={setPatents}
       />
+      <Results patents={patents} />
+      <AddFormModal open={open} handleClose={handleClose} />
     </div>
   );
 };

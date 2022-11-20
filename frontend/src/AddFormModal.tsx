@@ -1,6 +1,12 @@
 import Modal from "@mui/material/Modal";
 import Backdrop from "@mui/material/Backdrop";
-import AddForm from "./AddForm";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Fade from "@mui/material/Fade";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { useState } from "react";
 
 const modalStyle = {
   position: "absolute" as "absolute",
@@ -16,11 +22,23 @@ const modalStyle = {
 
 interface Props {
   open: boolean;
-  handleOpen: () => void;
   handleClose: () => void;
 }
 
-const AddFormModal: React.FC<Props> = ({ open, handleOpen, handleClose }) => {
+const AddFormModal: React.FC<Props> = ({ open, handleClose }) => {
+  const [patentTitle, setPatentTitle] = useState<string>("");
+  const [patentDate, setPatentDate] = useState<string>("");
+
+  const postPatent = () => {
+    axios.post("http://localhost:8080/patent", {
+      publication_date: patentDate,
+      title: patentTitle,
+    });
+    handleClose();
+    setPatentDate("");
+    setPatentTitle("");
+  };
+
   return (
     <Modal
       open={open}
@@ -33,7 +51,37 @@ const AddFormModal: React.FC<Props> = ({ open, handleOpen, handleClose }) => {
         timeout: 500,
       }}
     >
-      <AddForm modalStyle={modalStyle} open={open} />
+      <Fade in={open}>
+        <Box sx={modalStyle}>
+          <Typography
+            id="transition-modal-title"
+            variant="h6"
+            component="h2"
+            sx={{ marginBottom: "2rem" }}
+          >
+            Add a new Patent
+          </Typography>
+          <TextField
+            id="outline-basic"
+            fullWidth
+            label="Title"
+            value={patentTitle}
+            onChange={(e) => setPatentTitle(e.target.value)}
+            sx={{ marginBottom: "2rem" }}
+          />
+          <TextField
+            id="outline-basic"
+            fullWidth
+            label="Date - YYYY-MM-DD"
+            value={patentDate}
+            onChange={(e) => setPatentDate(e.target.value)}
+            sx={{ marginBottom: "2rem" }}
+          />
+          <Button variant="contained" onClick={postPatent}>
+            Add
+          </Button>
+        </Box>
+      </Fade>
     </Modal>
   );
 };
